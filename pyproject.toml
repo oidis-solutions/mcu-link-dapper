@@ -1,0 +1,110 @@
+# * ********************************************************************************************************* *
+# *
+# * Copyright 2024 NXP
+# *
+# * SPDX-License-Identifier: BSD-3-Clause
+# * The BSD-3-Clause license for this file can be found in the LICENSE.txt file included with this distribution
+# * or at https://spdx.org/licenses/BSD-3-Clause.html#licenseText
+# *
+# * ********************************************************************************************************* *
+[project]
+name = "webix_dapper"
+description = "webix_dapper. A debugger probe plugin for use in any python project."
+dynamic = ["version"]
+
+requires-python = ">= 3.9"
+dependencies = ["wasmtime", "pyusb", "libusb_package"]
+
+authors = [{ name = "NXP" }]
+maintainers = [{ name = "Kelnar Michal", email = "michal.kelnar@nxp.com" }]
+readme = { file = "README.md", content-type = "text/markdown" }
+license = { text = "BSD-3-Clause" }
+
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: BSD 3-Clause 'New' or 'Revised' License",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+[tool.bumpversion]
+current_version = "0.1.0"
+
+[[tool.bumpversion.files]]
+filename = "src/python/dapper/__init__.py"
+search = '__version__ = "{current_version}"'
+replace = '__version__ = "{new_version}"'
+
+[[tool.bumpversion.files]]
+filename = "SW_Content_Register_spsdk_dapper.txt"
+search = "{current_version}"
+replace = "{new_version}"
+
+[tool.pytest.ini_options]
+testpaths = ["test/suites/python"]
+junit_family = "xunit1"
+
+[tool.coverage.report]
+exclude_lines = ["pragma: no cover", "safe_main()", "sys.exit(main())"]
+
+[tool.coverage.run]
+relative_files = true
+
+[tool.black]
+line-length = 100
+target-version = ["py39", "py310", "py311", "py312"]
+include = '\.pyi?$'
+
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+line_length = 100
+
+[tool.mypy]
+disallow_untyped_defs = true
+ignore_missing_imports = true
+warn_unused_ignores = true
+
+[tool.mypy-spsdk-dapper.dapper.webix_dapper_wasm]
+ignore_errors = true
+
+[tool.radon]
+exclude = "src/python/dapper/webix_dapper_wasm.py"
+
+[tool.pydocstyle]
+convention = "google"
+add_ignore = "D105,D301"
+match = '(?!test_|__version__).*\.py'
+
+[tool.pylint]
+format = { max-line-length = 120 }
+"messages control" = { disable = ["logging-fstring-interpolation"] }
+ignore = ["webix_dapper_wasm.py"]
+
+[tool.nxp_codecheck]
+git_parent_branch = "origin/master"
+output_directory = "build/reports"
+default_check_paths = ["src/python", "test/python", "test/suites/python"]
+checkers = [
+    { "pytest" = { args = ["test/suites/python"] } },
+    { "gitcov" = { info_only = true } },
+    "pylint",
+    "mypy",
+    "dependencies",
+    # "pydocstyle", docs are coming soon
+    { "radon_c" = { info_only = true } },
+    "radon_d",
+    "black",
+    "isort",
+    "copyright",
+    "py_headers",
+    { "bandit" = { info_only = true } },
+]

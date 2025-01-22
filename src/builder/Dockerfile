@@ -1,0 +1,19 @@
+ #/* ********************************************************************************************************* *
+ # *
+ # * Copyright 2024 NXP
+ # *
+ # * SPDX-License-Identifier: BSD-3-Clause
+ # * The BSD-3-Clause license for this file can be found in the LICENSE.txt file included with this distribution
+ # * or at https://spdx.org/licenses/BSD-3-Clause.html#licenseText
+ # *
+ # * ********************************************************************************************************* */
+
+FROM nxpwebix/webix-dapper-base:2024.1.0
+MAINTAINER Michal Kelnar "michal.kelnar@nxp.com"
+
+WORKDIR "/var/webix"
+COPY build.sh build.sh
+RUN sed -i 's/\r//g' build.sh
+RUN chmod +x build.sh
+
+CMD ["./build.sh"]

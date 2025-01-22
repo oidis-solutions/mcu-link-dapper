@@ -1,0 +1,66 @@
+{
+  "name": "webix-dapper",
+  "version": "2025.0.0",
+  "description": "Module for application to target communication over CMSIS-DAP",
+  "license": "BSD-3-clause",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nxp-mcuxpresso/MCU-Link-Dapper.git"
+  },
+  "private": true,
+  "dependencies": {
+    "@types/node": "^18.17.12",
+    "@types/w3c-web-usb": "^1.0.10"
+  },
+  "type": "module",
+  "main": "src/js",
+  "devDependencies": {
+    "mocha": "^10.4.0",
+    "mocha-multi-reporters": "^1.5.1",
+    "assert": "^2.1.0",
+    "puppeteer": "^22.13.0",
+    "mocha-junit-reporter": "^2.2.1",
+    "cross-os": "^1.5.0",
+    "rollup": "^4.13.0",
+    "rollup-plugin-delete": "^2.0.0",
+    "rollup-plugin-serve": "^1.1.1",
+    "rollup-plugin-livereload": "^2.0.5",
+    "rollup-plugin-copy": "^3.5.0",
+    "@rollup/plugin-replace": "^5.0.5",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-terser": "^0.4.4",
+    "fast-glob": "^3.3.2",
+    "archiver": "^7.0.1",
+    "@eslint/js": "^9.4.0",
+    "eslint": "^9.4.0",
+    "eslint-plugin-unused-imports": "^4.0.0",
+    "globals": "^15.4.0"
+  },
+  "scripts": {
+    "install": "cross-os build",
+    "build": "cross-os build && rollup -c",
+    "release": "cross-os build && cross-os lint && rollup -c rollup.distro.mjs",
+    "watch": "rollup -c -w",
+    "test": "rollup -c rollup.test.mjs && mocha test/suites/js/test*.mjs --reporter mocha-multi-reporters --reporter-options configFile=.mocha-reporter.json",
+    "test-py": "cross-os test",
+    "lint": "cross-os lint"
+  },
+  "cross-os": {
+    "build": {
+      "darwin": "./scripts/build.sh",
+      "linux": "./scripts/build.sh",
+      "win32": "powershell ./scripts/build.ps1"
+    },
+    "lint": {
+      "darwin": "./scripts/lint.sh",
+      "linux": "./scripts/lint.sh",
+      "win32": "echo 'nothing'"
+    },
+    "test": {
+      "darwin": "./scripts/test.sh",
+      "linux": "./scripts/test.sh",
+      "win32": "echo 'nothing'"
+    }
+  }
+}

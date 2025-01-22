@@ -1,0 +1,175 @@
+<!--# * ********************************************************************************************************* *-->
+<!--# *-->
+<!--# * Copyright 2024 NXP -->
+<!--# *-->
+<!--# * SPDX-License-Identifier: BSD-3-Clause-->
+<!--# * The BSD-3-Clause license for this file can be found in the LICENSE.txt file included with this distribution-->
+<!--# * or at https://spdx.org/licenses/BSD-3-Clause.html#licenseText-->
+<!--# *-->
+<!--# * ********************************************************************************************************* *-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dapper Test</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="">
+    <style>
+        #notSupported {
+            display: none;
+            text-align: center;
+        }
+
+        .notSupportedFont {
+            color: darkred;
+            font-weight: bold;
+            font-size: large;
+        }
+
+        #hidden {
+            display: block;
+        }
+    </style>
+    <script>
+        function detectBrowser() {
+            let userAgent = navigator.userAgent;
+            let isSafari = /Safari/.test(userAgent) && !/Chrome/.test(userAgent);
+            let isFirefox = /Firefox/.test(userAgent);
+
+            if (isSafari || isFirefox) {
+                document.getElementById('notSupported').style.display = 'block';
+                document.getElementById('hidden').style.display = 'none';
+            }
+        }
+    </script>
+</head>
+<body onload="detectBrowser()">
+<div id="notSupported">
+    <div class="notSupportedFont">
+        This browser doesn't support USB connection. Please use Chrome or Edge to dapperize your life.
+    </div>
+    <div>
+        See <a href=https://developer.mozilla.org/en-US/docs/Web/API/USBDevice#browser_compatibility">MDN</a> for
+        compatibility information.
+    </div>
+</div>
+<div id="hidden">
+    <button id="openDevice">Open device</button>
+    <br>
+    <button id="resetDevice">Reset device</button>
+    <br>
+    <button id="DPAPjs">DPAP JS test</button>
+    <br>
+    <button id="startFetch">start fetch</button>
+    <br>
+    <button id="stopFetch">stop fetch</button>
+    <br>
+    <button id="closeDevice">Close device</button>
+    <br>
+    <label for="data">Data: </label><br>
+    <textarea id="data" rows="20" cols="100" style="white-space: pre">
+        ... Press "Open device" to gather device info...
+        </textarea>
+    <br>
+    <button id="downloadTrace">Download trace data</button>
+    <br>
+</div>
+<script type="module" src="../../src/js/webix-dapper.mjs"></script>
+<script type="module">
+    import {WebixDapper} from "../../src/js/webix-dapper.mjs";
+
+    const openBtn = document.getElementById('openDevice');
+    openBtn.disabled = true;
+
+    const dapper = new WebixDapper();
+    dapper.trace = true;
+    dapper.Init()
+        .then(() => {
+            console.debug("Dapper initialized. Happy dappering!")
+            document.getElementById('openDevice').disabled = false;
+        })
+        .catch((error) => {
+            console.error("Dapper load failed: ", error)
+        });
+
+    openBtn.addEventListener('click', async () => {
+        let device;
+        try {
+            device = await navigator.usb.requestDevice({
+                filters: dapper.SupportedVendorIDs.map((item) => {
+                    return {vendorId: item}
+                })
+            });
+            navigator.usb.addEventListener('disconnect', async event => {
+                if (event.device === device) {
+                    console.debug('Device disconnected');
+                    device = null;
+                    await dapper.Close();
+                    document.getElementById("data").innerText = `... Press "Open device" to gather device info...`;
+                }
+            });
+        } catch (e) {
+            // selection canceled
+        }
+        if (device) {
+            try {
+                await dapper.Open(device);
+                const info = await dapper.getProbeInfo();
+                document.getElementById("data").innerHTML = `${JSON.stringify(info, null, 2)}`;
+            } catch (e) {
+                console.error(e.message);
+            }
+        }
+    });
+
+    document.getElementById('closeDevice').addEventListener('click', async () => {
+        document.getElementById("data").innerText = `... Press "Open device" to gather device info...`;
+        await dapper.Close();
+    });
+
+    document.getElementById('resetDevice').addEventListener('click', async () => {
+        document.getElementById("data").innerText = `... Device reset performed ...`;
+        await dapper.Reset();
+    });
+
+    document.getElementById('DPAPjs').addEventListener('click', async () => {
+        dapper.setStdoutHandler((data) => {
+            console.log(data);
+            document.getElementById("data").value += data;
+        });
+        dapper.setStderrHandler((data) => {
+            console.log(data);
+            document.getElementById("data").value += data;
+        });
+
+        document.getElementById("data").value = `... DPAP JS performed ...\n`;
+        await dapper.DPAPjs();
+    });
+
+    let interval;
+    document.getElementById('startFetch').addEventListener('click', async () => {
+        const fetchData = async () => {
+            document.getElementById("data").innerText = await dapper.fetchData();
+        }
+        interval = setInterval(fetchData, 500);
+    });
+    document.getElementById('stopFetch').addEventListener('click', async () => {
+        clearInterval(interval);
+    });
+
+    document.getElementById("downloadTrace").addEventListener("click", () => {
+        const data = JSON.stringify(dapper.traceData, (key, value) => {
+            if (typeof value === "object" && value?.buffer) {
+                return [...new Uint8Array(value)];
+            }
+            return value;
+        });
+        const blob = new Blob([data], {type: 'application/json'});
+        const downloadLink = document.createElement('a');
+        downloadLink.href = URL.createObjectURL(blob);
+        downloadLink.download = 'trace.json';
+        downloadLink.click();
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!--# * ********************************************************************************************************* *-->
+<!--# *-->
+<!--# * Copyright 2024 NXP -->
+<!--# *-->
+<!--# * SPDX-License-Identifier: BSD-3-Clause-->
+<!--# * The BSD-3-Clause license for this file can be found in the LICENSE.txt file included with this distribution-->
+<!--# * or at https://spdx.org/licenses/BSD-3-Clause.html#licenseText-->
+<!--# *-->
+<!--# * ********************************************************************************************************* *-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dapper Test</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="">
+    <style>
+        #notSupported {
+            display: none;
+            text-align: center;
+        }
+
+        .notSupportedFont {
+            color: darkred;
+            font-weight: bold;
+            font-size: large;
+        }
+
+        #hidden {
+            display: block;
+        }
+    </style>
+    <script>
+        function detectBrowser() {
+            let userAgent = navigator.userAgent;
+            let isSafari = /Safari/.test(userAgent) && !/Chrome/.test(userAgent);
+            let isFirefox = /Firefox/.test(userAgent);
+
+            if (isSafari || isFirefox) {
+                document.getElementById('notSupported').style.display = 'block';
+                document.getElementById('hidden').style.display = 'none';
+            }
+        }
+    </script>
+</head>
+<body onload="detectBrowser()">
+<div id="notSupported">
+    <div class="notSupportedFont">
+        This browser doesn't support USB connection. Please use Chrome or Edge to dapperize your life.
+    </div>
+    <div>
+        See <a href=https://developer.mozilla.org/en-US/docs/Web/API/USBDevice#browser_compatibility">MDN</a> for
+        compatibility information.
+    </div>
+</div>
+<div id="hidden">
+    <button id="throwWasm">throw wasm exception</button>
+    <br>
+    <label for="data">Data: </label><br>
+    <textarea id="data" rows="20" cols="100" style="white-space: pre">
+        ... Press "Open device" to gather device info...
+        </textarea>
+    <br>
+</div>
+<script type="module" src="../js/mock-dapper.mjs"></script>
+<script type="module">
+    import {WebixDapper} from "../js/mock-dapper.mjs";
+
+    const dapper = new WebixDapper();
+    dapper.Init()
+        .then(() => {
+            console.debug("Dapper initialized. Happy dappering!")
+        })
+        .catch((error) => {
+            console.error("Dapper load failed: ", error)
+        });
+
+    document.getElementById('throwWasm').addEventListener('click', async () => {
+        try {
+            await dapper.test_throw_exception();
+            document.getElementById("data").innerText = `NO Exception`;
+        } catch (e) {
+            document.getElementById("data").innerText = `Exception: ${e.message}`;
+        }
+    });
+</script>
+</body>
+</html>

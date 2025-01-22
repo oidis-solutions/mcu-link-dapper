@@ -1,0 +1,7 @@
+{
+  "reporterEnabled": "mocha-junit-reporter, spec",
+  "mochaJunitReporterReporterOptions": {
+    "mochaFile": "./build/reports/unit/javascript/junit.xml",
+    "testsuitesTitle": "webix-dapper-js"
+  }
+}

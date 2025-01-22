@@ -1,0 +1,45 @@
+# /* ********************************************************************************************************* *
+#  *
+#  * Copyright 2024 NXP
+#  *
+#  * SPDX-License-Identifier: BSD-3-Clause
+#  * The BSD-3-Clause license for this file can be found in the LICENSE.txt file included with this distribution
+#  * or at https://spdx.org/licenses/BSD-3-Clause.html#licenseText
+#  *
+#  * ********************************************************************************************************* */
+
+!/*
+
+# IDE settings
+/.idea/*
+!/.idea/runConfigurations/
+!/.idea/libraries/
+!/.idea/*.iml
+!/.idea/jsLibraryMappings.xml
+!/.idea/modules.xml
+!/.idea/misc.xml
+!/.idea/vcs.xml
+
+/build/
+/build_cache/
+/node_definitions/
+/node_modules/
+/node_modules
+/cmake-build-*/
+/log/
+package-map.json
+package-lock.json
+/test/data/*/TEST/
+/test/data/RunTestOutput/
+/test/data/UnitTestOutput/
+/dependencies/
+**/build_wasm/
+/venv/
+**/__pycache__/
+
+*.prof
+*.tmp.txt
+*.log
+sh.exe.stackdump
+*.DS_Store
+*.directory

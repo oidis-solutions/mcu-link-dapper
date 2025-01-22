@@ -1,0 +1,6 @@
+{
+  "version": "2024.1.0",
+  "build": {
+    "name": "nxpwebix/webix-dapper-base"
+  }
+}

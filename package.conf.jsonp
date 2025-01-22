@@ -1,0 +1,18 @@
+/* ********************************************************************************************************* *
+ *
+ * Copyright 2024 NXP
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ * The BSD-3-Clause license for this file can be found in the LICENSE.txt file included with this distribution
+ * or at https://spdx.org/licenses/BSD-3-Clause.html#licenseText
+ *
+ * ********************************************************************************************************* */
+Io.Oidis.Builder.DAO.Resources.Data({
+    $interface: "IProjectSolution",
+    name: "webix-dapper",
+    solutions: {
+        "js": "bin/project/js-distro.jsonp",
+        "py": "bin/project/py-distro.jsonp",
+        "src": "bin/project/src-distro.jsonp"
+    }
+});

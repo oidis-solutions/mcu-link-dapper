@@ -1,0 +1,28 @@
+# /* ********************************************************************************************************* *
+#  *
+#  * Copyright 2024 NXP
+#  *
+#  * SPDX-License-Identifier: BSD-3-Clause
+#  * The BSD-3-Clause license for this file can be found in the LICENSE.txt file included with this distribution
+#  * or at https://spdx.org/licenses/BSD-3-Clause.html#licenseText
+#  *
+#  * ********************************************************************************************************* */
+
+.git* export-ignore
+.idea/ export-ignore
+build/ export-ignore
+deps/ export-ignore
+src/ export-ignore
+test/ export-ignore
+package-lock.json
+node_definitions/ export-ignore
+node_modules/ export-ignore
+dependencies/ export-ignore
+atlassian-ide-plugin.xml export-ignore
+*.iml export-ignore
+private.conf.json export-ignore
+
+*.sh text eol=lf
+
+*.bin filter=lfs diff=lfs merge=lfs -text
+*.hex filter=lfs diff=lfs merge=lfs -text
