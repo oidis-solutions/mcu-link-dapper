@@ -10,5 +10,6 @@
 
 wasmtime==25.0.0
 pyusb==1.2.1
-hidapi==0.14.0.post3
+hidapi==0.14.0.post4
 libusb_package
+typing_extensions

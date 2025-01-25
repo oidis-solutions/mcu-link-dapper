@@ -346,7 +346,6 @@ class UsbInterface(Interface):
 
         logger.info(f"Device to open: {self._device.product} ({self._device.manufacturer})")
 
-        self._device.set_configuration()
         cfg = self._device.get_active_configuration()
         interfaces = cfg[(0, 0)]
 
