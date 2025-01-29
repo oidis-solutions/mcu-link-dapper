@@ -24,7 +24,7 @@ except ImportError:
     hid = type("hid", (), {"device": None})  # bypass for Interface[T] type checker
     IMPORTS_AVAILABLE = False
 
-deep_trace: bool = True
+deep_trace: bool = False
 
 
 class HidInterface(Interface[hid.device]):
