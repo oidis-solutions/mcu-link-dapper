@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright 2024 NXP
+# Copyright 2025 Oidis
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
@@ -22,14 +23,14 @@ Components
 * Interface: Enumeration of available interfaces
 """
 
-from .webix_dapper import DapperFactory, DapperProbeInfo, Interface, WebixDapper
-from .webix_dapper_wasm import Uint8Array, WebixDapperWasm
+from .webix_dapper import DapperFactory, DapperProbeInfo, WebixDapper
+from .webix_dapper_wasm import WebixDapperWasm
+from .core import Uint8Array
 
 __all__ = [
     "DapperFactory",
     "DapperProbeInfo",
     "WebixDapper",
     "WebixDapperWasm",
-    "Uint8Array",
-    "Interface",
+    "Uint8Array"
 ]
