@@ -1,6 +1,6 @@
-Release Name: MCU-Link-Dapper v2025.0.0
+Release Name: mcu-link-dapper v2025.0.0
 
-webix-dapper-py
+webix-dapper-js
 Description: Module for application to target communication over CMSIS-DAP.
 Author: NXP
 License: BSD-3-Clause. See LICENSE.txt
@@ -9,7 +9,7 @@ Location: [application-name],
           [application-name]/webix-dapper.js,
           [application-name]/webix-dapper-wasm.wasm
 
-webix-dapper-js
+webix-dapper-py
 Description: Module for application to target communication over CMSIS-DAP.
 Author: NXP
 License: BSD-3-Clause. See LICENSE.txt

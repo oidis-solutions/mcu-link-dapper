@@ -1,11 +1,11 @@
 {
   "name": "webix-dapper",
-  "version": "2025.0.0",
+  "version": "2025.0.1",
   "description": "Module for application to target communication over CMSIS-DAP",
   "license": "BSD-3-clause",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nxp-mcuxpresso/MCU-Link-Dapper.git"
+    "url": "https://github.com/oidis-solutions/mcu-link-dapper.git"
   },
   "private": true,
   "dependencies": {
