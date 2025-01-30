@@ -17,9 +17,7 @@ import logging
 
 from dataclasses import dataclass
 from time import sleep
-from typing import Any, Callable, cast
-
-from typing_extensions import Optional, Union
+from typing import Any, Callable, cast,  Optional, Union
 
 from .core import Uint8Array
 from .interfaces import Interface, InterfaceFactory

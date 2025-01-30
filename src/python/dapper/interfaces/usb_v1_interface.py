@@ -132,6 +132,8 @@ class UsbV1Interface(Interface[usb.core.Device]):
                 self._device.detach_kernel_driver(self.interface_number)
         except usb.core.USBError as e:
             logger.warning(f"kernel driver detach failed: {e}")
+        except RuntimeError:
+            pass
 
         try:
             usb.util.claim_interface(self._device, self.interface_number)

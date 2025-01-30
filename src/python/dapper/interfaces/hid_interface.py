@@ -43,7 +43,7 @@ class HidInterface(Interface[hid.device]):
     @classmethod
     def priority(cls) -> int:
         """Returns priority. The lower the number, the higher the priority."""
-        return 3 if platform.system() == "Darwin" else 10
+        return 3 if platform.system() == "Darwin" or platform.system() == "Windows" else 10
 
     def __init__(
             self, device: hid.device, info: dict  # pylint: disable=c-extension-no-member
