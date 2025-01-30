@@ -106,7 +106,7 @@ class UsbV1Interface(Interface[usb.core.Device]):
         descriptors = usb.util.find_descriptor(cfg, find_all=True, bInterfaceClass=0x03)
         for iface in descriptors:
             i_name = usb.util.get_string(self._device, iface.iInterface)
-            if any(item in i_name for item in ["CMSIS-DAP V2", "CMSIS-DAP"]):
+            if any(item in i_name for item in ("CMSIS-DAP V2", "CMSIS-DAP")):
                 interface = iface
                 break
 
