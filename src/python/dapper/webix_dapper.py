@@ -464,6 +464,7 @@ class DapperFactory:
                 if probe.serial_no not in {known_probe.serial_no for known_probe in probes}:
                     probes.append(probe)
 
+        DapperFactory.probes = probes
         return probes
 
     @classmethod
