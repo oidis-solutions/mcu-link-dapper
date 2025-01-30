@@ -81,15 +81,19 @@ class UsbV1Interface(Interface[usb.core.Device]):
             usb_devices = libusb_package.find(find_all=True, idVendor=vid)
             for usb_device in usb_devices:
                 if usb_device.bDeviceClass in {0x00, 0xEF}:  # not HID
-                    config = usb_device.get_active_configuration()
-                    ifaces = usb.util.find_descriptor(config, find_all=True)
-                    hid_ifaces: list[any] = []
-                    for iface in ifaces:
-                        if iface.bInterfaceClass == 0x03 and iface.bInterfaceSubClass == 0x00:
-                            hid_ifaces.append(iface)
+                    try:
+                        config = usb_device.get_active_configuration()
+                        ifaces = usb.util.find_descriptor(config, find_all=True)
+                        hid_ifaces: list[any] = []
+                        for iface in ifaces:
+                            if iface.bInterfaceClass == 0x03 and iface.bInterfaceSubClass == 0x00:
+                                hid_ifaces.append(iface)
 
-                    if len(hid_ifaces) > 0:
-                        probes.append(UsbV1Interface(usb_device))
+                        if len(hid_ifaces) > 0:
+                            probes.append(UsbV1Interface(usb_device))
+                    except usb.core.USBError:
+                        pass
+
         return probes
 
     def open(self) -> None:
