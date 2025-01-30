@@ -26,11 +26,13 @@ Components
 from .webix_dapper import DapperFactory, DapperProbeInfo, WebixDapper
 from .webix_dapper_wasm import WebixDapperWasm
 from .core import Uint8Array
+from .interfaces import Interface
 
 __all__ = [
     "DapperFactory",
     "DapperProbeInfo",
     "WebixDapper",
     "WebixDapperWasm",
-    "Uint8Array"
+    "Uint8Array",
+    "Interface"
 ]

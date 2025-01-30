@@ -77,7 +77,7 @@ class UsbV1Interface(Interface[usb.core.Device]):
         """
         probes: list[Interface] = []
         # todo(mkelnar) supported_vendor_ids will be changed
-        for vid in list([0x1FC9]):
+        for vid in list([0x1FC9, 0x0d28]):
             usb_devices = libusb_package.find(find_all=True, idVendor=vid)
             for usb_device in usb_devices:
                 if usb_device.bDeviceClass in {0x00, 0xEF}:  # not HID
@@ -106,7 +106,7 @@ class UsbV1Interface(Interface[usb.core.Device]):
         descriptors = usb.util.find_descriptor(cfg, find_all=True, bInterfaceClass=0x03)
         for iface in descriptors:
             i_name = usb.util.get_string(self._device, iface.iInterface)
-            if "CMSIS-DAP V2" in i_name:
+            if any(item in i_name for item in ["CMSIS-DAP V2", "CMSIS-DAP"]):
                 interface = iface
                 break
 
