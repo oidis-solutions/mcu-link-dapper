@@ -9,5 +9,5 @@ from .arrays import Int32Array, Uint8Array
 
 __all__ = [
     "Int32Array",
-    "Uint8Array"
+    "Uint8Array",
 ]

@@ -87,6 +87,7 @@ match = '(?!test_|__version__).*\.py'
 
 [tool.pylint]
 format = { max-line-length = 120 }
+design = { max-args = 20 }
 "messages control" = { disable = ["logging-fstring-interpolation"] }
 ignore = ["webix_dapper_wasm.py"]
 

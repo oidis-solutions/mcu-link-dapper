@@ -14,10 +14,9 @@ various probe interfaces and provides data structures for probe information mana
 """
 
 import logging
-
 from dataclasses import dataclass
 from time import sleep
-from typing import Any, Callable, cast,  Optional, Union
+from typing import Any, Callable, Optional, Union, cast
 
 from .core import Uint8Array
 from .interfaces import Interface, InterfaceFactory
@@ -130,6 +129,7 @@ class WebixDapper:  # pylint: disable=too-many-public-methods
         if callable(value):
             self._stdout_handler = value
         else:
+
             def custom_print(*args: Any) -> None:
                 last = args[-1] if args else ""
                 if not last.endswith("\n"):
@@ -250,7 +250,7 @@ class WebixDapper:  # pylint: disable=too-many-public-methods
         module_instance.runtime_init()
 
         def writeData(  # pylint: disable=invalid-name
-                instance: "WebixDapper", data: Uint8Array
+            instance: "WebixDapper", data: Uint8Array
         ) -> None:
             # pylint: disable=unused-argument
             self.write_data(data)
@@ -456,7 +456,7 @@ class DapperFactory:
         :return: List of available probes
         """
         interfaces = InterfaceFactory.load_interfaces()
-        probes = []
+        probes: list[Interface] = []
         for interface in interfaces:
             for probe in interface.list_probes():
                 if probe.serial_no not in {known_probe.serial_no for known_probe in probes}:

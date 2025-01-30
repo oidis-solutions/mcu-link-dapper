@@ -14,12 +14,13 @@ from .interface import Interface
 
 logger = logging.getLogger("InterfaceFactory")
 
+
 class InterfaceFactory:
     @staticmethod
-    def load_interfaces():
+    def load_interfaces() -> list[type[Interface]]:
         interfaces = []
         pkg_dir = Path(__file__).resolve().parent
-        for _, module_name, _ in pkgutil.iter_modules([pkg_dir]):
+        for _, module_name, _ in pkgutil.iter_modules([str(pkg_dir)]):
             module = importlib.import_module(f"{__name__}.{module_name}")
             for _, obj in inspect.getmembers(module, inspect.isclass):
                 if issubclass(obj, Interface) and obj is not Interface:
@@ -33,5 +34,5 @@ class InterfaceFactory:
 
 __all__ = [
     "Interface",
-    "InterfaceFactory"
+    "InterfaceFactory",
 ]

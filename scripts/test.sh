@@ -43,7 +43,7 @@ mkdir -p build/reports/unit/python
 pytest -v --junitxml=build/reports/unit/python/py-junit.xml test/suites/python/test*.py || exit 1
 
 if command - v codecheck >/dev/null 2>&1; then
-  codecheck --disable-check PYTEST --parent-branch release || exit 1
+  codecheck --disable-check PYTEST --parent-branch main || exit 1
 fi
 
 echo "Tests done"

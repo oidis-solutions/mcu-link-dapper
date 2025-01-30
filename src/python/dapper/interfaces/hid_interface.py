@@ -10,8 +10,8 @@ import logging
 import platform
 from typing import Any
 
-from . import Interface
 from ..core import Uint8Array
+from . import Interface
 
 logger = logging.getLogger(__name__)
 
@@ -46,7 +46,7 @@ class HidInterface(Interface[hid.device]):
         return 3 if platform.system() == "Darwin" or platform.system() == "Windows" else 10
 
     def __init__(
-            self, device: hid.device, info: dict  # pylint: disable=c-extension-no-member
+        self, device: hid.device, info: dict  # pylint: disable=c-extension-no-member
     ) -> None:
         """Initialize HID interface.
 

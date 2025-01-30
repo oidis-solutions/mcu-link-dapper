@@ -29,7 +29,7 @@ from wasmtime import (
     Store,
 )
 
-from .core import Uint8Array, Int32Array
+from .core import Int32Array, Uint8Array
 
 logger = logging.getLogger(__name__)
 if logger.level == logging.NOTSET:
@@ -1173,21 +1173,25 @@ class WebixDapperWasm:
         )
 
         if arg_count == 0:
+
             def x_caller_0(obj: Any, func: Callable, destructors_ref: int, args: Any) -> Any:
                 return x_executor0(obj, func, destructors_ref, args)
 
             return emval_add_method_caller(x_caller_0)
         if arg_count == 1:
+
             def x_caller_1(obj: Any, func: Callable, destructors_ref: int, args: Any) -> Any:
                 return x_executor1(obj, func, destructors_ref, args)
 
             return emval_add_method_caller(x_caller_1)
         if arg_count == 2:
+
             def x_caller_2(obj: Any, func: Callable, destructors_ref: int, args: Any) -> Any:
                 return x_executor2(obj, func, destructors_ref, args)
 
             return emval_add_method_caller(x_caller_2)
         if arg_count == 3:
+
             def x_caller_3(obj: Any, func: Callable, destructors_ref: int, args: Any) -> Any:
                 return x_executor3(obj, func, destructors_ref, args)
 
@@ -1405,7 +1409,7 @@ class WebixDapperWasm:
             if std_string_is_utf8:
                 decode_start_ptr = 0
                 for i in range(length + 1):
-                    current_byte = raw_data[i: i + 1]
+                    current_byte = raw_data[i : i + 1]
                     if i == length or current_byte == b"\x00":
                         string_segment = raw_data[decode_start_ptr:i].decode("utf-8")
                         str_data.append(string_segment)

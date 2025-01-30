@@ -9,22 +9,23 @@ import ctypes
 import logging
 import queue
 import threading
-from typing import Optional
+from typing import Any, Optional
 
-from . import Interface
 from ..core import Uint8Array
+from . import Interface
 
 logger = logging.getLogger(__name__)
 
 try:
-    import usb
     import libusb_package
+    import usb
 
     IMPORTS_AVAILABLE = True
 except ImportError:
     logger.debug("usb or libusb_package not available. USB v1 interface will not be available.")
-    usb = type("usb", (), {"core": type("core", (), {"Device": None})})  # bypass for Interface[T] type checker
-    libusb_package = None
+    usb = type(
+        "usb", (), {"core": type("core", (), {"Device": None})}
+    )  # bypass for Interface[T] type checker
     IMPORTS_AVAILABLE = False
 
 
@@ -63,7 +64,7 @@ class UsbV1Interface(Interface[usb.core.Device]):
         self.pid = device.idProduct
         self.packet_size = 64
 
-        self.thread = None
+        self.thread: Optional[threading.Thread] = None
         self.interface_number = 0
         self.worker_stop_flag = threading.Event()
         self.data_fifo_rx: queue.SimpleQueue[bytes] = queue.SimpleQueue()
@@ -77,14 +78,14 @@ class UsbV1Interface(Interface[usb.core.Device]):
         """
         probes: list[Interface] = []
         # todo(mkelnar) supported_vendor_ids will be changed
-        for vid in list([0x1FC9, 0x0d28]):
+        for vid in list([0x1FC9, 0x0D28]):
             usb_devices = libusb_package.find(find_all=True, idVendor=vid)
             for usb_device in usb_devices:
                 if usb_device.bDeviceClass in {0x00, 0xEF}:  # not HID
                     try:
                         config = usb_device.get_active_configuration()
                         ifaces = usb.util.find_descriptor(config, find_all=True)
-                        hid_ifaces: list[any] = []
+                        hid_ifaces: list[Any] = []
                         for iface in ifaces:
                             if iface.bInterfaceClass == 0x03 and iface.bInterfaceSubClass == 0x00:
                                 hid_ifaces.append(iface)
@@ -115,7 +116,9 @@ class UsbV1Interface(Interface[usb.core.Device]):
                 break
 
         if interface is None:
-            raise RuntimeError(f"Unable to find USB device endpoints for interface {self.serial_no}")
+            raise RuntimeError(
+                f"Unable to find USB device endpoints for interface {self.serial_no}"
+            )
 
         for endpoint in interface:
             if endpoint.bEndpointAddress & usb.util.ENDPOINT_IN:
@@ -127,6 +130,11 @@ class UsbV1Interface(Interface[usb.core.Device]):
             raise RuntimeError("Unable to find USB device endpoints.")
 
         self.interface_number = interface.bInterfaceNumber
+        self._claim_interface()
+
+        self._start_worker()
+
+    def _claim_interface(self) -> None:
         try:
             if self._device.is_kernel_driver_active(self.interface_number):
                 self._device.detach_kernel_driver(self.interface_number)
@@ -140,13 +148,12 @@ class UsbV1Interface(Interface[usb.core.Device]):
         except usb.core.USBError as e:
             raise RuntimeError("Unable to claim interface.") from e
 
-        self._start_worker()
-
     def close(self) -> None:
         """Close the USB interface connection."""
         self.worker_stop_flag.set()
         self.read_mutex.release()
-        self.thread.join()
+        if isinstance(self.thread, threading.Thread):
+            self.thread.join()
         self.worker_stop_flag.clear()
         usb.util.release_interface(self._device, self.interface_number)
         usb.util.dispose_resources(self._device)
@@ -184,20 +191,23 @@ class UsbV1Interface(Interface[usb.core.Device]):
 
         return Uint8Array((ctypes.c_uint8 * len(data))(*data))
 
-    def _start_worker(self):
+    def _start_worker(self) -> None:
         """Worker thread initiator."""
 
         try:
             while True:
-                self._endpoint_in.read(self._endpoint_in.wMaxPacketSize, 1)
+                if self._endpoint_in is not None:
+                    self._endpoint_in.read(self._endpoint_in.wMaxPacketSize, 1)
         except usb.core.USBError:
             pass
 
-        self.thread = threading.Thread(target=self._worker_rx, name=f"{self._type}_worker_rx ({self.serial_no})")
+        self.thread = threading.Thread(
+            target=self._worker_rx, name=f"{self._type}_worker_rx ({self.serial_no})"
+        )
         self.thread.daemon = True
         self.thread.start()
 
-    def _worker_rx(self):
+    def _worker_rx(self) -> None:
         """Receiver thread worker."""
 
         logger.debug("receiver worker starting")
@@ -205,8 +215,11 @@ class UsbV1Interface(Interface[usb.core.Device]):
             while not self.worker_stop_flag.is_set():
                 self.read_mutex.acquire()
                 if not self.worker_stop_flag.is_set():
-                    read_data = self._endpoint_in.read(self._endpoint_in.wMaxPacketSize, 10000).tobytes()
-                    self.data_fifo_rx.put(read_data)
+                    if self._endpoint_in is not None:
+                        read_data = self._endpoint_in.read(
+                            self._endpoint_in.wMaxPacketSize, 10000
+                        ).tobytes()
+                        self.data_fifo_rx.put(read_data)
         except Exception as e:
             logger.debug(f"receiver worker failed: {e}")
 

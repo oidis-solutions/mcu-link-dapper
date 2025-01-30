@@ -18,8 +18,8 @@ from typing import Any, Optional
 from python.dapper import Uint8Array, WebixDapper
 from python.dapper.interfaces import Interface
 
-
 # pylint: disable=no-member
+
 
 def fcn_void_void(self: Any) -> None:
     # pylint: disable=unused-argument

@@ -9,20 +9,21 @@ import ctypes
 import logging
 from typing import Optional
 
-from . import Interface
 from ..core import Uint8Array
+from . import Interface
 
 logger = logging.getLogger(__name__)
 
 try:
-    import usb
     import libusb_package
+    import usb
 
     IMPORTS_AVAILABLE = True
 except ImportError:
     logger.debug("usb or libusb_package not available. USB v2 interface will not be available.")
-    usb = type("usb", (), {"core": type("core", (), {"Device": None})})  # bypass for Interface[T] type checker
-    libusb_package = None
+    usb = type(
+        "usb", (), {"core": type("core", (), {"Device": None})}
+    )  # bypass for Interface[T] type checker
     IMPORTS_AVAILABLE = False
 
 
@@ -94,13 +95,15 @@ class UsbV2Interface(Interface[usb.core.Device]):
 
         self._endpoint_in = usb.util.find_descriptor(
             interfaces,
-            custom_match=lambda e: usb.util.endpoint_direction(e.bEndpointAddress)
-                                   == usb.util.ENDPOINT_IN,
+            custom_match=lambda e: (
+                usb.util.endpoint_direction(e.bEndpointAddress) == usb.util.ENDPOINT_IN
+            ),
         )
         self._endpoint_out = usb.util.find_descriptor(
             interfaces,
-            custom_match=lambda e: usb.util.endpoint_direction(e.bEndpointAddress)
-                                   == usb.util.ENDPOINT_OUT,
+            custom_match=lambda e: (
+                usb.util.endpoint_direction(e.bEndpointAddress) == usb.util.ENDPOINT_OUT
+            ),
         )
 
         if self._endpoint_in is None or self._endpoint_out is None:

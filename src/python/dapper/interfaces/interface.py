@@ -6,7 +6,7 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 from abc import abstractmethod
-from typing import TypeVar, Generic
+from typing import Generic, TypeVar
 
 from ..core import Uint8Array
 
@@ -41,7 +41,7 @@ class Interface(Generic[T]):
         raise NotImplementedError()
 
     @classmethod
-    def priority(cls)->int:
+    def priority(cls) -> int:
         """Returns priority. The lower the number, the higher the priority."""
         return 10
 
@@ -70,7 +70,7 @@ class Interface(Generic[T]):
         """
         if self._device is None:
             raise RuntimeError("Device not initialized")
-        return self._device.serial_number
+        return self._device.serial_number  # type: ignore[attr-defined]
 
     @property
     def description(self) -> str:

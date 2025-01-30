@@ -32,7 +32,7 @@ if __name__ == "__main__":
     log_level = logging.WARNING
     if args.verbose:
         log_level = logging.DEBUG
-        logging.basicConfig(level=log_level, format="[%(levelname)s] %(message)s" )
+        logging.basicConfig(level=log_level, format="[%(levelname)s] %(message)s")
 
     DapperFactory.set_wasm_path(
         os.path.abspath(

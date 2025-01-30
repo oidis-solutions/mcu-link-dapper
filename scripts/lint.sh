@@ -53,7 +53,7 @@ export PYTHONUNBUFFERED=1
 pylint ./src ./test || exit 1
 
 if command - v codecheck >/dev/null 2>&1; then
-  codecheck --fix --disable-check PYTEST --parent-branch release || exit 1
+  codecheck --fix --disable-check PYTEST --parent-branch main || exit 1
 fi
 
 echo "Lint done"

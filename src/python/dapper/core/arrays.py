@@ -9,14 +9,15 @@
 import ctypes
 from typing import Any, Optional, Union
 
+
 class Uint8Array:
     """8-bit unsigned integer array implementation."""
 
     def __init__(
-            self,
-            source: Union[ctypes.Array, "Uint8Array"],
-            offset: int = 0,
-            length: Optional[int] = None,
+        self,
+        source: Union[ctypes.Array, "Uint8Array"],
+        offset: int = 0,
+        length: Optional[int] = None,
     ) -> None:
         """8-bit unsigned integer array implementation.
 
@@ -63,7 +64,7 @@ class Uint8Array:
 
     # JS emulation
     def constructor(
-            self, val: Union[ctypes.Array, "Uint8Array"], ptr: int, size: int
+        self, val: Union[ctypes.Array, "Uint8Array"], ptr: int, size: int
     ) -> "Uint8Array":
         """Create new array from existing array.
 
@@ -136,10 +137,10 @@ class Uint8Array:
 
 class Int32Array:
     def __init__(
-            self,
-            source: Union[ctypes.Array, Uint8Array, "Int32Array"],
-            offset: int = 0,
-            length: Optional[int] = None,
+        self,
+        source: Union[ctypes.Array, Uint8Array, "Int32Array"],
+        offset: int = 0,
+        length: Optional[int] = None,
     ) -> None:
         """Initialize Int32Array.
 
@@ -190,7 +191,7 @@ class Int32Array:
 
     # JS emulation
     def constructor(
-            self, val: Union[ctypes.Array, "Int32Array"], ptr: int, size: int
+        self, val: Union[ctypes.Array, "Int32Array"], ptr: int, size: int
     ) -> "Int32Array":
         """Constructor method for creating a new Int32Array.
 

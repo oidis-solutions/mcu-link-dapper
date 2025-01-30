@@ -23,10 +23,10 @@ Components
 * Interface: Enumeration of available interfaces
 """
 
-from .webix_dapper import DapperFactory, DapperProbeInfo, WebixDapper
-from .webix_dapper_wasm import WebixDapperWasm
 from .core import Uint8Array
 from .interfaces import Interface
+from .webix_dapper import DapperFactory, DapperProbeInfo, WebixDapper
+from .webix_dapper_wasm import WebixDapperWasm
 
 __all__ = [
     "DapperFactory",
@@ -34,5 +34,5 @@ __all__ = [
     "WebixDapper",
     "WebixDapperWasm",
     "Uint8Array",
-    "Interface"
+    "Interface",
 ]
